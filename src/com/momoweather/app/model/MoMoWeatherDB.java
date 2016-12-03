@@ -20,11 +20,11 @@ public class MoMoWeatherDB {
 	
 	//构造函数
 	MoMoWeatherDB(Context context){
-		MoMoWeatherOpenHelper momoWeatherOpenHelper = new MoMoWeatherOpenHelper(context, "momo_weather", null, 1) ;
+		MoMoWeatherOpenHelper momoWeatherOpenHelper = new MoMoWeatherOpenHelper(context,DB_NAME, null, DB_VERSION) ;
 		db = momoWeatherOpenHelper.getWritableDatabase();
 	}
 	
-	//利用getInstance()获取实例，利用Synchronized保证全局范围只有一个该实例（锁）
+	//利用getInstance()获取实例，利用Synchronized保证全局范围只有一个该实例（锁）（一般服务类都要求整个程序只存在一个该实例）
 	public synchronized static MoMoWeatherDB getInstance(Context context){
 		if(momoWeatherDB == null){
 			momoWeatherDB = new MoMoWeatherDB(context);
@@ -52,7 +52,7 @@ public class MoMoWeatherDB {
 				Province province = new Province();
 				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
-				province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_nameS")));
+				province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
 				list.add(province);
 			}while(cursor.moveToNext());
 		}
@@ -71,9 +71,9 @@ public class MoMoWeatherDB {
 	}
 		
 	//从数据库读取全国城市信息
-	public List<City> loadCities(){
+	public List<City> loadCities(int provinceId){
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("Province", null, null, null, null, null, null) ;
+		Cursor cursor = db.query("City", null, "province_id = ?", new String[]{String.valueOf(provinceId)}, null, null, null) ;
 		if(cursor.moveToFirst()){
 			do{
 				City city = new City();
@@ -94,14 +94,14 @@ public class MoMoWeatherDB {
 			values.put("country_name", country.getCountryName());
 			values.put("country_code", country.getCountryCode());
 			values.put("city_id", country.getCityId());
-			db.insert("City", null, values);
+			db.insert("Country", null, values);
 			}
 	}
 		
 	//从数据库读取全市所有县信息
-	public List<Country> loadCounties(){
+	public List<Country> loadCounties(int cityId){
 		List<Country> list = new ArrayList<Country>();
-		Cursor cursor = db.query("Province", null, null, null, null, null, null) ;
+		Cursor cursor = db.query("Country", null, "city_id=?", new String[]{String.valueOf(cityId)}, null, null, null) ;
 		if(cursor.moveToFirst()){
 			do{
 				Country country = new Country();
