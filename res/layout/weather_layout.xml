@@ -39,7 +39,7 @@
          android:layout_width="match_parent"
         android:layout_height="0dp" 
         android:layout_weight="1"
-        android:background="#99FF99">
+        android:background="#99BBFF">
         <TextView 
             android:id="@+id/publish_text"
             android:layout_width="wrap_content"
