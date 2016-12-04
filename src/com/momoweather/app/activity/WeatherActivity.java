@@ -1,6 +1,7 @@
 package com.momoweather.app.activity;
 
 import com.momoweather.app.activity.ChooseAreaActivity;
+import com.momoweather.app.service.AutoUpdateService;
 import com.example.momoweather.R;
 import com.momoweather.app.util.HttpCallbackListener;
 import com.momoweather.app.util.HttpUtil;
@@ -109,6 +110,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText.setText(prefs.getString("current_data", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		Intent i = new Intent(this,AutoUpdateService.class);
+		startService(i);
 		
 	}
 
